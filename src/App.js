@@ -11,6 +11,7 @@ import Users from './components/Users';
 import UserDetails from './components/UserDetails';
 import Admin from './components/Admin';
 import Profile from './components/Profile';
+import PrivateRoute from './components/PrivateRoute';
 import Login from './components/Login';
 import { AuthProvider } from './contexts/Auth';
 const LazyAbout = React.lazy(() => import('./components/About'));
@@ -44,7 +45,14 @@ function App() {
             {/* fixed path overrides the dynamic route */}
             <Route path="admin" element={<Admin />} />
           </Route>
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
