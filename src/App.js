@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
 import OrderSummary from './components/OrderSummary';
@@ -10,40 +10,46 @@ import NewProducts from './components/NewProducts';
 import Users from './components/Users';
 import UserDetails from './components/UserDetails';
 import Admin from './components/Admin';
-// import About from './components/About';
+import Profile from './components/Profile';
+import Login from './components/Login';
+import { AuthProvider } from './contexts/Auth';
 const LazyAbout = React.lazy(() => import('./components/About'));
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route
-          path="about"
-          element={
-            <React.Suspense fallback="Loading...">
-              <LazyAbout />
-            </React.Suspense>
-          }
-        />
-        <Route path="order-summary" element={<OrderSummary />} />
-        {/* nexted routes add Outlet to parent component, one use case is to use a layout component and
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route
+            path="about"
+            element={
+              <React.Suspense fallback="Loading...">
+                <LazyAbout />
+              </React.Suspense>
+            }
+          />
+          <Route path="order-summary" element={<OrderSummary />} />
+          {/* nexted routes add Outlet to parent component, one use case is to use a layout component and
         //  then use the outlet to render the child route */}
-        <Route path="products" element={<Products />}>
-          {/* index route shares the path of the parent route, this one shows by default */}
-          <Route index element={<FeaturedProducts />} />
-          <Route path="featured" element={<FeaturedProducts />} />
-          <Route path="new" element={<NewProducts />} />
-        </Route>
-        <Route path="users" element={<Users />}>
-          <Route path=":userid" element={<UserDetails />} />
-          {/* fixed path overrides the dynamic route */}
-          <Route path="admin" element={<Admin />} />
-        </Route>
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
-    </>
+          <Route path="products" element={<Products />}>
+            {/* index route shares the path of the parent route, this one shows by default */}
+            <Route index element={<FeaturedProducts />} />
+            <Route path="featured" element={<FeaturedProducts />} />
+            <Route path="new" element={<NewProducts />} />
+          </Route>
+          <Route path="users" element={<Users />}>
+            <Route path=":userid" element={<UserDetails />} />
+            {/* fixed path overrides the dynamic route */}
+            <Route path="admin" element={<Admin />} />
+          </Route>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
